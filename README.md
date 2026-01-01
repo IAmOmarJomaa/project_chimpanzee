@@ -32,11 +32,10 @@ graph TD
     Check -- "No" --> Generate
     
     Generate --> End([Final Response])
+```              
 
 
-    ### 📄 Part 2: Pipeline to Structure
 
-```markdown
 ### 🏭 The "Factory" (Ingestion Pipeline)
 A strict ETL pipeline transforms raw text into a queryable Graph + Vector store.
 
