@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  neo4j:
+    image: neo4j:latest
+    container_name: chimpanzee_graph
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      # This dynamically pulls from your .env file at runtime
+      - NEO4J_AUTH=${NEO4J_USER}/${NEO4J_PASSWORD}
+      - NEO4J_dbms_memory_heap_initial_size=${NEO4J_MEMORY_HEAP_INITIAL:-512M}
+      - NEO4J_dbms_memory_heap_max_size=${NEO4J_MEMORY_HEAP_MAX:-1G}
+    volumes:
+      - ./data/neo4j/data:/data
+      - ./data/neo4j/logs:/logs
+      - ./data/neo4j/import:/var/lib/neo4j/import
+      - ./data/neo4j/plugins:/plugins
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: chimpanzee_llm
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./data/ollama:/root/.ollama
