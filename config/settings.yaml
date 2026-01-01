@@ -1,0 +1,43 @@
+# config/settings.yaml
+project:
+  name: "Project Chimpanzee"
+  version: "2.0"
+
+paths:
+  # Relative paths from the ingestion_pipeline directory
+  raw_data: "../data/raw_transcripts"
+  bronze: "../data/bronze_lake_v3.parquet"
+  silver: "../data/silver_production_final.parquet"
+  gold: "../data/gold_dna.parquet"
+  platinum_vectors: "../data/platinum_vectors.parquet"
+  platinum_edges: "../data/hypergraph_edges"
+  nodes: "../data/hypergraph_nodes.parquet"
+
+ad_detection:
+  known_sponsors:
+    - "draftkings"
+    - "athletic greens"
+    - "ag1"
+    - "meundies"
+    - "squarespace"
+    - "expressvpn"
+    - "nordvpn"
+    - "cash app"
+    - "betterhelp"
+    - "onnit"
+    - "fleshlight"
+    - "manscaped"
+    - "ziprecruiter"
+  
+  sales_keywords:
+    - "promo code"
+    - "code rogan"
+    - "discount"
+    - "save"
+    - "free trial"
+    - "sponsored by"
+    - "brought to you"
+
+nlp:
+  spacy_model: "en_core_web_sm"
+  min_sentence_length: 20
