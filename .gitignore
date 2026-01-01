@@ -3,3 +3,4 @@ data/
 __pycache__/
 *.parquet
 *.jsonl
+PROJECT_CONTEXT.txt

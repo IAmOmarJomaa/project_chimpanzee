@@ -13,8 +13,8 @@ load_dotenv() # <--- ADD THIS CALL
 
 # ... rest of your imports (FastAPI, lancedb, etc.) ...
 
-from llm_engine import LLMEngine 
-from agent.workflow import build_agent_graph 
+from application.llm_engine import LLMEngine 
+from application.agent.workflow import build_agent_graph 
 
 # --- CONFIGURATION ---
 NEO4J_URI = "bolt://localhost:7687"

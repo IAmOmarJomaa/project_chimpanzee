@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+pydantic
+neo4j
+polars
+sentence-transformers
+python-dotenv
+numpy
+scikit-learn

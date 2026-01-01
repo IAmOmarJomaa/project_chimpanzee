@@ -3,8 +3,8 @@ MODULE: Agent Nodes (Master Version)
 DESCRIPTION: 
     Fixed variable mapping for LLMEngine and schema-aware Cypher generation.
 """
-from application.llm_engine import LLMEngine
-from application.agent.state import AgentState
+from llm_engine import LLMEngine
+from agent.state import AgentState
 
 # --- HELPER: Run Cypher ---
 def run_cypher(driver, query):
