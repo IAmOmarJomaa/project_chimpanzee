@@ -32,8 +32,11 @@ graph TD
     Check -- "No" --> Generate
     
     Generate --> End([Final Response])
-'''
 
+
+    ### 📄 Part 2: Pipeline to Structure
+
+```markdown
 ### 🏭 The "Factory" (Ingestion Pipeline)
 A strict ETL pipeline transforms raw text into a queryable Graph + Vector store.
 
@@ -67,9 +70,9 @@ A strict ETL pipeline transforms raw text into a queryable Graph + Vector store.
     ```bash
     cp .env.example .env  # Set NEO4J_PASSWORD
     ```
-2.  **Run the Pipeline (Optional - Data Provided):**
+2.  **Run the Pipeline (Orchestrator):**
     ```bash
-    python ingestion_pipeline/4_ingest_v3_final.py
+    python run_pipeline.py
     ```
 3.  **Chat with the Brain:**
     ```bash
@@ -78,16 +81,13 @@ A strict ETL pipeline transforms raw text into a queryable Graph + Vector store.
 
 ## 5. Repository Structure
 ```bash
-├── ingestion_pipeline/    # ETL Scripts (1-18)
-│   ├── 4_ingest.py        # Bronze Layer (Raw)
-│   ├── 7_clean.py         # Silver Layer (Cleaning)
-│   ├── 13_graph.py        # Platinum Layer (Graph Build)
-│   └── 16_loader.py       # Neo4j Bulk Loader
+├── ingestion_pipeline/    # ETL Scripts
+│   └── core/
+│       ├── etl/           # Medallion Layers
+│       ├── graph/         # Neo4j Builders
+│       └── vectors/       # LanceDB Embedders
 ├── application/           # The Agent
-│   ├── agent/             
-│   │   ├── nodes.py       # Functional Units (Search, Grade)
-│   │   ├── state.py       # TypedDict Memory
-│   │   └── workflow.py    # Graph Wiring
+│   ├── agent/             # LangGraph Logic
 │   └── llm_engine.py      # Ollama Wrapper
-└── config/                # Settings.yaml
-
+├── config/                # settings.yaml
+└── docker-compose.yml     # Infrastructure
