@@ -4,6 +4,7 @@
 .venv
 __pycache__/
 *.pyc
+.gitignore
 
 # --- Data & Logs ---
 data/
