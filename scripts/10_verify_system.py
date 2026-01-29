@@ -1,9 +1,15 @@
 import sys
 from neo4j import GraphDatabase
+import os
+from dotenv import load_dotenv
 
-# --- CONFIGURATION ---
-NEO4J_URI = "bolt://localhost:7687"
-NEO4J_AUTH = ("neo4j", "chimpanzee") 
+# Load the .env file
+load_dotenv()
+
+# Fetch variables
+NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD")
 
 def query_graph():
     print(f"--- Connecting to The Brain ---")
@@ -15,9 +21,6 @@ def query_graph():
         return
 
     session = driver.session()
-
-    # 1. THE "KEVIN BACON" TEST (Shortest Path)
-    # Let's find how Elon Musk is connected to someone random, like Alex Jones.
     print("\n[Test 1] Pathfinding: Elon Musk <-> Alex Jones")
     query_path = """
     MATCH (p1:PERSON {id: "Elon Musk"}), (p2:PERSON {id: "Alex Jones"})
@@ -31,7 +34,6 @@ def query_graph():
         print("   > No direct path found (Try increasing hop count).")
 
     # 2. THE "TOPIC AUTHORITY" TEST
-    # Who talks about "Aliens" the most?
     topic = "aliens"
     print(f"\n[Test 2] Who are the experts on '{topic}'?")
     query_topic = """

@@ -12,8 +12,8 @@ ARCHITECTURE:
 """
 
 from langgraph.graph import StateGraph, END
-from agent.state import AgentState
-from agent.nodes import (
+from src.agent.state import AgentState
+from src.agent.nodes import (
     cypher_generation_node, 
     retrieval_node, 
     grade_documents_node, 

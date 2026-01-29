@@ -1,27 +1,45 @@
 version: '3.8'
 
 services:
+  # Graph Database
   neo4j:
     image: neo4j:latest
-    container_name: chimpanzee_graph
+    container_name: chimpanzee-neo4j
     ports:
-      - "7474:7474"
-      - "7687:7687"
+      - "7474:7474" # Browser UI
+      - "7687:7687" # Bolt Protocol
     environment:
-      # This dynamically pulls from your .env file at runtime
-      - NEO4J_AUTH=${NEO4J_USER}/${NEO4J_PASSWORD}
-      - NEO4J_dbms_memory_heap_initial_size=${NEO4J_MEMORY_HEAP_INITIAL:-512M}
-      - NEO4J_dbms_memory_heap_max_size=${NEO4J_MEMORY_HEAP_MAX:-1G}
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}
+      - NEO4J_PLUGINS=["apoc"]
     volumes:
-      - ./data/neo4j/data:/data
-      - ./data/neo4j/logs:/logs
-      - ./data/neo4j/import:/var/lib/neo4j/import
-      - ./data/neo4j/plugins:/plugins
+      - ./data/neo4j:/data # Mounts your preprocessed graph data
 
-  ollama:
-    image: ollama/ollama:latest
-    container_name: chimpanzee_llm
+  # FastAPI Backend
+  backend:
+    build: .
+    container_name: chimpanzee-api
+    command: uvicorn application.main:app --host 0.0.0.0 --port 8001
     ports:
-      - "11434:11434"
+      - "8001:8001"
+    env_file:
+      - .env
     volumes:
-      - ./data/ollama:/root/.ollama
+      - .:/app # Live code mounting
+    depends_on:
+      - neo4j
+
+  # Streamlit Frontend
+  frontend:
+    build: .
+    container_name: chimpanzee-ui
+    command: streamlit run frontend/app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    depends_on:
+      - backend
+
+networks:
+  default:
+    name: chimpanzee-network

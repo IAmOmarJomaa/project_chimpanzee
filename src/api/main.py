@@ -4,23 +4,30 @@ from pydantic import BaseModel
 import lancedb
 from neo4j import GraphDatabase
 from sentence_transformers import SentenceTransformer
-import os
 from typing import List, Dict
-from dotenv import load_dotenv # <--- ADD THIS IMPORT
-
 # Load environment variables from .env file
-load_dotenv() # <--- ADD THIS CALL
-
-# ... rest of your imports (FastAPI, lancedb, etc.) ...
-
-from application.llm_engine import LLMEngine 
-from application.agent.workflow import build_agent_graph 
-
+from src.agent.engine import LLMEngine
+from src.agent.graph import build_agent_graph
 # --- CONFIGURATION ---
-NEO4J_URI = "bolt://localhost:7687"
-NEO4J_AUTH = ("neo4j", "chimpanzee") 
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+import os
+from dotenv import load_dotenv
+
+# Load the .env file
+load_dotenv()
+
+# Fetch variables
+NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD")
+
+if not NEO4J_PASSWORD:
+    raise ValueError("CRITICAL: NEO4J_PASSWORD is missing from .env")
+
+# Auth Tuple
+NEO4J_AUTH = (NEO4J_USER, NEO4J_PASSWORD)
+# Go up 3 levels: src/api/main.py -> src/api -> src -> PROJECT_ROOT
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LANCEDB_URI = os.path.join(BASE_DIR, "data", "lancedb_store")
 TABLE_NAME = "chimpanzee_vectors"
 MODEL_NAME = "all-MiniLM-L6-v2"
@@ -57,8 +64,9 @@ async def lifespan(app: FastAPI):
             print(f"   > [Vectors] Error: {e}")
     
     # 3. Load Components
-    print("   > [AI Model] Loading Encoder...")
-    state["encoder"] = SentenceTransformer(MODEL_NAME)
+    print("   > [AI Model] Loading Encoder on CPU (Saving GPU for LLM)...")
+    # Force CPU to prevent VRAM thrashing with Ollama
+    state["encoder"] = SentenceTransformer(MODEL_NAME, device="cpu")
     
     print("   > [LLM] Connecting to Local Brain...")
     state["llm"] = LLMEngine()

@@ -1,6 +1,15 @@
+# --- Security ---
 .env
-data/
+.env.local
+.venv
 __pycache__/
+*.pyc
+
+# --- Data & Logs ---
+data/
+logs/
+*.log
 *.parquet
-*.jsonl
+*.lance
+neo4j_data/
 PROJECT_CONTEXT.txt

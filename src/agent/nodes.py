@@ -3,8 +3,8 @@ MODULE: Agent Nodes (Master Version)
 DESCRIPTION: 
     Fixed variable mapping for LLMEngine and schema-aware Cypher generation.
 """
-from llm_engine import LLMEngine
-from agent.state import AgentState
+from src.agent.engine import LLMEngine
+from src.agent.state import AgentState
 
 # --- HELPER: Run Cypher ---
 def run_cypher(driver, query):
@@ -64,7 +64,7 @@ def retrieval_node(state: AgentState, vector_table, encoder, neo4j_driver):
     # Strategy B: Vector Fallback
     try:
         query_vec = encoder.encode(state["question"]).tolist()
-        vec_results = vector_table.search(query_vec).limit(5).to_list()
+        vec_results = vector_table.search(query_vec).limit(3).to_list()
         for r in vec_results:
             context.append({
                 "text": r.get("text_content") or r.get("text") or "",
