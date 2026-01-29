@@ -15,7 +15,7 @@
 Unlike standard RAG systems that rely solely on vector similarity (often resulting in hallucinations), this system uses a **Self-Correcting State Machine**. The agent autonomously plans search strategies, grades document relevance, and rewrites its own queries if the initial retrieval is poor.
 
 **Key Engineering Achievements:**
-* **Scale:** Processed **76,639,229 Tokens** (approx. 3TB audio transcripts) into a unified Knowledge Graph.
+* **Scale:** Processed **76,639,229 Tokens** into a unified Knowledge Graph.
 * **Memory Efficiency:** Implemented **Polars Streaming** to build a Neo4j graph with **26M+ edges** on consumer hardware ($O(1)$ RAM usage).
 * **Performance:** Achieved **8.24s average latency** with a **7.1% Self-Correction Rate** on local hardware (RTX 4050).
 
@@ -49,6 +49,17 @@ flowchart LR
     style Lance fill:#333,color:white
     style Neo fill:#333,color:white
 ```
+### 🕸️ The Graph Ontology (Data Model)
+Unlike a simple vector store, Chimpanzee maps the *relationships* between ideas.
+
+* **Nodes:**
+    * `(:PERSON)`: Extracted Guest Names (e.g., "Elon Musk", "Paul Stamets").
+    * `(:CONCEPT)`: Key topics extracted via NLP (e.g., "Mycelium", "Mars Colonization").
+* **Edges (Relationships):**
+    * `(:PERSON)-[:DISCUSSED {weight: 5}]->(:CONCEPT)`: Links experts to topics they mentioned frequently.
+    * `(:CONCEPT)-[:CO_OCCURRED {chaos: 8.5}]->(:CONCEPT)`: Links topics that appear together in heated debates.
+
+**Why this matters:** This allows the agent to perform **Multi-Hop Reasoning**. It can answer *"Who are the experts on Mushrooms?"* by traversing `(Concept: Mushrooms) <-[:DISCUSSED]- (Person)`.
  
 # 🧠 The "Brain" (Agent Workflow)
 
