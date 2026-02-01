@@ -83,7 +83,7 @@ stateDiagram-v2
 
 1. Clone the Repo:
 ```bash
-git clone https://github.com/YourUsername/project-chimpanzee.git
+git clone https://github.com/IAmOmarJomaa/project_chimpanzee/
 cd project-chimpanzee
 pip install -r requirements.txt
 ```
